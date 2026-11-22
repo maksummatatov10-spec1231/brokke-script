@@ -1,0 +1,2111 @@
+СПРАВОЧНИК API СКРИПТОВ BROKKE.CC (Kotlin .kts)
+Всё ниже доступно в скрипте без import.
+
+=== ГЛОБАЛЬНЫЕ ФУНКЦИИ И ОБЪЕКТЫ ===
+  val player
+  val world
+  val client
+  val chat
+  val log
+  val raycast
+  val control
+  val interaction
+  val inventory
+  val rotations
+  val keys
+  val text
+  val game
+  val gameSettings
+  val FIRST_PERSON
+  val THIRD_PERSON_BACK
+  val THIRD_PERSON_FRONT
+  val storage
+  val configs
+  val filters
+  val assets
+  val math
+  val json
+  val strings
+  val container
+  val shared
+  val id: String
+  fun name(value: String)
+  fun description(value: String)
+  fun key(value: Int)
+  fun bind(value: Int)
+  fun requireApi(version: Int)
+  fun onEnable(body: () -> Unit)
+  fun onDisable(body: () -> Unit)
+  fun onUnload(body: () -> Unit)
+  var enabled: Boolean
+  fun toggle()
+  val inGame: Boolean
+  fun whenInGame(body: () -> Unit)
+  fun checkBox(name: String, default: Boolean = false)
+  fun checkBox(parent: Check?, name: String, default: Boolean = false)
+  fun slider(name: String, default: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun slider(parent: Check?, name: String, default: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun slider(name: String, default: Int, min: Int, max: Int)
+  fun slider(parent: Check?, name: String, default: Int, min: Int, max: Int)
+  fun slider(name: String, default: Int, min: Int, max: Int, step: Int)
+  fun slider(parent: Check?, name: String, default: Int, min: Int, max: Int, step: Int)
+  fun rangeSlider(name: String, from: Float, to: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun rangeSlider(parent: Check?, name: String, from: Float, to: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun input(name: String, default: String = "")
+  fun input(parent: Check?, name: String, default: String = "")
+  fun selectable(name: String, vararg options: String, selected: String? = null)
+  fun combo(name: String, vararg options: String, selected: List<String> = emptyList())
+  fun colorPicker(name: String, default: Int)
+  fun colorPicker(parent: Check?, name: String, default: Int)
+  fun colorPicker(name: String, default: Long)
+  fun colorPicker(parent: Check?, name: String, default: Long)
+  fun hotkey(name: String, default: Int, body: () -> Unit)
+  fun button(name: String, body: () -> Unit)
+  fun timer()
+  fun nextTick(body: () -> Unit)
+  fun afterTicks(ticks: Int, body: () -> Unit)
+  fun everyTicks(ticks: Int, body: () -> Unit)
+  fun onClientThread(body: () -> Unit)
+  fun notify(message: Any?, kind: NotifyKind = NotifyKind.OK)
+  fun config(name: String)
+  fun everyTick(body: () -> Unit)
+  fun everyMillis(ms: Long, body: () -> Unit)
+  fun afterMillis(ms: Long, body: () -> Unit)
+  fun everySeconds(seconds: Double, body: () -> Unit)
+  fun afterSeconds(seconds: Double, body: () -> Unit)
+  fun onBecome(condition: () -> Boolean, body: () -> Unit)
+  fun <T> watch(source: () -> T, onChange: (T) -> Unit)
+  fun sequence(body: ScriptSequence.() -> Unit): ScriptSequence
+  fun ScriptSequence.run(action: () -> Unit): ScriptSequence
+  fun ScriptSequence.wait(ticks: Int): ScriptSequence
+  fun ScriptSequence.waitMs(ms: Long): ScriptSequence
+  fun ScriptSequence.waitUntil(timeoutTicks: Int = -1, condition: () -> Boolean): ScriptSequence
+  fun ScriptSequence.repeat(times: Int, action: () -> Unit): ScriptSequence
+  fun ScriptSequence.repeatWhile(condition: () -> Boolean, action: () -> Unit): ScriptSequence
+  fun ScriptSequence.stopIf(condition: () -> Boolean): ScriptSequence
+  fun ScriptSequence.whenDone(action: () -> Unit): ScriptSequence
+  fun animation(value: Double = 0.0, durationMs: Long = 300, easing: String = "outCubic")
+  fun spring(value: Double = 0.0, stiffness: Double = 180.0, damping: Double = 22.0)
+  fun fadeToggle(durationMs: Long = 250, easing: String = "outCubic")
+  fun rate(windowMs: Long = 1000)
+  fun cooldowns()
+  fun counter()
+  fun <T> history(capacity: Int)
+  fun stateMachine(initial: String, body: ScriptUtil.StateMachine.() -> Unit = {})
+  fun query(): EntityQuery
+  fun targets(range: Double): EntityQuery
+  fun send(channel: String, data: Any? = null): Int
+  fun listen(channel: String, body: (Message) -> Unit)
+  fun onTick(body: () -> Unit)
+  fun onRender2D(body: (Render2DEvent) -> Unit)
+  fun onRender3D(body: (Render3DEvent) -> Unit)
+  fun onWorldLoad(body: (String) -> Unit)
+  fun onEntitySpawn(body: (Entity) -> Unit)
+  fun onEntityRemove(body: (Entity) -> Unit)
+  fun clamp(v: Double, min: Double, max: Double)
+  fun clamp(v: Float, min: Float, max: Float)
+  fun clamp(v: Int, min: Int, max: Int)
+  fun lerp(a: Double, b: Double, t: Double)
+  fun lerp(a: Float, b: Float, t: Float)
+  fun random(min: Double, max: Double)
+  fun randomInt(min: Int, max: Int)
+  fun chance(probability: Double)
+  fun vec(x: Number, y: Number, z: Number)
+  fun shader(name: String, fragmentSource: String, vertexSource: String? = null)
+  val nav
+  val friends
+  val waypoints
+  val http
+  val clientConfigs
+  fun author(value: String)
+  fun version(value: String)
+  fun dependsOn(vararg ids: String)
+  fun scriptLoaded(id: String): Boolean
+  fun scriptEnabled(id: String): Boolean
+  fun notify(title: String, message: Any?, kind: NotifyKind, durationMs: Long = 2500L)
+  fun module(name: String, category: ModuleCategory = ModuleCategory.MISC, body: ScriptModule.() -> Unit): ScriptModule
+  fun module(name: String, category: String, body: ScriptModule.() -> Unit): ScriptModule
+  fun ScriptModule.checkBox(name: String, default: Boolean = false)
+  fun ScriptModule.checkBox(parent: Check?, name: String, default: Boolean = false)
+  fun ScriptModule.slider(name: String, default: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun ScriptModule.slider(parent: Check?, name: String, default: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun ScriptModule.slider(name: String, default: Int, min: Int, max: Int)
+  fun ScriptModule.slider(parent: Check?, name: String, default: Int, min: Int, max: Int)
+  fun ScriptModule.slider(name: String, default: Int, min: Int, max: Int, step: Int)
+  fun ScriptModule.rangeSlider(name: String, from: Float, to: Float, min: Float, max: Float, step: Float = 0.01f)
+  fun ScriptModule.input(name: String, default: String = "")
+  fun ScriptModule.input(parent: Check?, name: String, default: String = "")
+  fun ScriptModule.selectable(name: String, vararg options: String, selected: String? = null)
+  fun ScriptModule.combo(name: String, vararg options: String, selected: List<String> = emptyList())
+  fun ScriptModule.colorPicker(name: String, default: Int)
+  fun ScriptModule.colorPicker(name: String, default: Long)
+  fun ScriptModule.hotkey(name: String, default: Int, body: () -> Unit)
+  fun ScriptModule.button(name: String, body: () -> Unit)
+  fun ScriptModule.onEnable(body: () -> Unit)
+  fun ScriptModule.onDisable(body: () -> Unit)
+  fun ScriptModule.onTick(body: () -> Unit)
+  fun <reified T : Any> ScriptModule.on(priority: Int = Priority.NORMAL, ignoreCancelled: Boolean = false, body: (T) -> Unit)
+  fun ScriptModule.onRender2D(body: (Render2DEvent) -> Unit)
+  fun ScriptModule.onRender3D(body: (Render3DEvent) -> Unit)
+  fun bind(key: Int, ctrl: Boolean = false, shift: Boolean = false, alt: Boolean = false, onPress: () -> Unit): KeyBind
+  fun bind(combo: String, onPress: () -> Unit): KeyBind
+  fun bindHold(key: Int, whileHeld: () -> Unit): KeyBind
+  fun bindHold(combo: String, whileHeld: () -> Unit): KeyBind
+  fun KeyBind.onRelease(body: () -> Unit): KeyBind
+  fun KeyBind.whileHeld(body: () -> Unit): KeyBind
+  fun KeyBind.onPress(body: () -> Unit): KeyBind
+  fun hud(name: String, x: Float = 10f, y: Float = 10f, width: Float = 80f, height: Float = 20f, body: HudFrame.() -> Unit): ScriptHud
+  fun screen(title: String, body: ScriptScreen.() -> Unit = {}): ScriptScreen
+  fun ScriptScreen.button(text: String, action: () -> Unit)
+  fun ScriptScreen.toggle(text: String, value: Boolean = false, onChange: (Boolean) -> Unit = {})
+  fun ScriptScreen.checkBox(text: String, value: Boolean = false, onChange: (Boolean) -> Unit = {})
+  fun ScriptScreen.slider(text: String, value: Float, min: Float, max: Float, step: Float = 0.01f, onChange: (Float) -> Unit = {})
+  fun ScriptScreen.slider(text: String, value: Int, min: Int, max: Int, onChange: (Int) -> Unit = {})
+  fun ScriptScreen.textInput(placeholder: String = "", value: String = "", onChange: (String) -> Unit = {})
+  fun ScriptScreen.input(placeholder: String = "", value: String = "", onChange: (String) -> Unit = {})
+  fun ScriptScreen.selector(text: String, vararg options: String, selected: String? = null, onChange: (String) -> Unit = {})
+  fun ScriptScreen.selectable(text: String, vararg options: String, selected: String? = null, onChange: (String) -> Unit = {})
+  fun ScriptScreen.label(text: () -> String)
+  fun ScriptScreen.canvas(height: Float, body: (ScreenCanvas) -> Unit)
+  fun ScriptScreen.onOpen(body: () -> Unit)
+  fun ScriptScreen.onClose(body: () -> Unit)
+  fun ScriptScreen.onKey(body: (Int) -> Unit)
+  fun ScriptScreen.TextInput.onSubmit(body: (String) -> Unit)
+  fun httpGet(url: String, callback: (HttpResponse) -> Unit)
+  fun httpGet(url: String, headers: Map<String, String>, callback: (HttpResponse) -> Unit)
+  fun httpPost(url: String, json: Any?, callback: (HttpResponse) -> Unit)
+  fun httpPostText(url: String, body: String, contentType: String = "text/plain; charset=utf-8", callback: (HttpResponse) -> Unit)
+  fun launch(name: String = "job", body: suspend () -> Unit): Job
+  fun cancelJobs()
+  fun jobs(): List<Job>
+  suspend fun waitTicks(ticks: Int)
+  suspend fun nextTick()
+  suspend fun waitMillis(ms: Long)
+  suspend fun waitSeconds(seconds: Double)
+  suspend fun waitUntil(timeoutTicks: Int = -1, condition: () -> Boolean): Boolean
+  suspend fun waitWhile(timeoutTicks: Int = -1, condition: () -> Boolean): Boolean
+  suspend fun fetch(url: String, timeoutMs: Long = 10000L): HttpResponse
+  suspend fun fetchPost(url: String, json: Any?, timeoutMs: Long = 10000L): HttpResponse
+  suspend fun turnTo(target: Vec, degreesPerTick: Float = 8f)
+  suspend fun walkTo(x: Int, y: Int, z: Int, timeoutTicks: Int = 20 * 120): Boolean
+  fun clickQueue(delayTicks: Int = 2): ClickQueue
+  fun ClickQueue.then(action: () -> Unit): ClickQueue
+  fun ClickQueue.waitUntil(condition: () -> Boolean): ClickQueue
+  fun ClickQueue.onDone(action: () -> Unit): ClickQueue
+  fun lookAtSmooth(target: Vec, degreesPerTick: Float = 8f, done: () -> Unit = {})
+  fun lookAtSmooth(target: Entity, degreesPerTick: Float = 8f, done: () -> Unit = {})
+  fun <T> retained(key: String, initial: () -> T): T
+  fun retain(key: String, value: Any?)
+  fun forget(key: String? = null)
+  fun provide(name: String, body: (List<Any?>) -> Any?)
+  fun call(name: String, vararg args: Any?): Any?
+  fun <T> profile(label: String, body: () -> T): T
+  fun onHealthChange(body: (HealthChangeEvent) -> Unit)
+  fun onDamage(body: (DamageEvent) -> Unit)
+  fun onDeath(body: (DeathEvent) -> Unit)
+  fun onRespawn(body: (RespawnEvent) -> Unit)
+  fun onTotemPop(body: (TotemPopEvent) -> Unit)
+  fun onPlayerJoin(body: (String) -> Unit)
+  fun onPlayerLeave(body: (String) -> Unit)
+  fun onChat(body: (ChatReceiveEvent) -> Unit)
+  fun onChatSend(body: (ChatSendEvent) -> Unit)
+  fun onTitle(body: (TitleEvent) -> Unit)
+  fun onSound(body: (SoundPlayEvent) -> Unit)
+  fun onScreenOpen(body: (ScreenOpenEvent) -> Unit)
+  fun onScreenClose(body: (ScreenCloseEvent) -> Unit)
+  fun onContainerOpen(body: (ContainerOpenEvent) -> Unit)
+  fun onItemPickup(body: (ItemPickupEvent) -> Unit)
+  fun onBlockBreak(body: (BlockBreakEvent) -> Unit)
+  fun onBlockInteract(body: (BlockInteractEvent) -> Unit)
+  fun onAttack(body: (Entity) -> Unit)
+  fun onServerConnect(body: (String) -> Unit)
+  fun onServerDisconnect(body: () -> Unit)
+  fun onDimensionChange(body: (DimensionChangeEvent) -> Unit)
+  fun onVelocity(body: (VelocityEvent) -> Unit)
+  fun onExplosion(body: (ExplosionEvent) -> Unit)
+  fun onTeleport(body: (TeleportEvent) -> Unit)
+  fun onScroll(body: (MouseScrollEvent) -> Unit)
+  fun onKeyPress(body: (Int) -> Unit)
+  fun onKeyRelease(body: (Int) -> Unit)
+  fun onModuleToggle(body: (ModuleToggleEvent) -> Unit)
+  val charts
+  val discord
+  val telegram
+  fun series(name: String, capacity: Int = 120, color: Int? = null): Series
+  fun series(name: String, capacity: Int, color: Long): Series
+  fun Series.sampleEvery(ticks: Int, source: () -> Number?): ScriptTask
+  fun chart(title: String = "", body: Chart.() -> Unit = {}): Chart
+  fun Chart.draw(frame: HudFrame)
+  fun Chart.draw(canvas: ScreenCanvas)
+  fun hudChart(name: String, vararg data: Series, x: Float = 10f, y: Float = 100f, width: Float = 150f, height: Float = 70f, body: Chart.() -> Unit = {}): ScriptHud
+  fun hudChart(name: String, chart: Chart, x: Float = 10f, y: Float = 100f, width: Float = 150f, height: Float = 70f): ScriptHud
+  fun ScriptScreen.chart(chart: Chart, height: Float = 80f)
+  fun screenshot(configure: ScreenshotOptions.() -> Unit)
+  fun screenshot(hideHud: Boolean, scale: Double = 1.0, onReady: (Screenshot) -> Unit)
+  fun takeScreenshot(onReady: (Screenshot) -> Unit)
+  fun ScreenshotOptions.onReady(body: (Screenshot) -> Unit): ScreenshotOptions
+  fun ScreenshotOptions.onError(body: (String) -> Unit): ScreenshotOptions
+  suspend fun capture(hideHud: Boolean = false, scale: Double = 1.0): Screenshot
+  suspend fun capture(configure: ScreenshotOptions.() -> Unit): Screenshot
+  fun Webhook.send(body: DiscordMessage.() -> Unit)
+  fun Webhook.send(text: String, callback: (HttpResponse) -> Unit)
+  fun Webhook.sendImage(shot: Screenshot, caption: String = "", callback: (HttpResponse) -> Unit)
+  fun DiscordMessage.embed(body: DiscordEmbed.() -> Unit): DiscordEmbed
+  fun DiscordMessage.onResult(body: (HttpResponse) -> Unit): DiscordMessage
+  fun keyboard(body: TelegramKeyboard.() -> Unit): TelegramKeyboard
+  fun TelegramBot.onMessage(body: (TelegramMessage) -> Unit): TelegramBot
+  fun TelegramBot.onCommand(command: String, body: (TelegramMessage) -> Unit): TelegramBot
+  fun TelegramBot.onCallback(data: String, body: (TelegramCallback) -> Unit): TelegramBot
+  fun TelegramBot.onCallback(body: (TelegramCallback) -> Unit): TelegramBot
+  fun TelegramBot.onError(body: (String) -> Unit): TelegramBot
+  fun <T> on(priority: Int = Priority.NORMAL, ignoreCancelled: Boolean = false, body: (T) -> Unit): Subscription
+  fun command(name: String, body: { description(..); usage(..); alias(..); runs { .. }; sub(name) { .. }; completes(index) { listOf(..) } })
+
+=== СОБЫТИЯ для on<...> ===
+  ClientTickEvent, PlayerTickEvent, PrePlayerTickEvent, PostPlayerTickEvent, RotationEvent, SyncEvent, PostSyncEvent,
+  MoveInputEvent, LookEvent, AttackEvent, KeyEvent, ChatReceiveEvent, PacketReceiveEvent, PacketSendEvent,
+  Render2DEvent, Render3DEvent, EntitySpawnEvent, EntityRemoveEvent, WorldLoadEvent, ModuleToggleEvent,
+  HealthChangeEvent, DamageEvent, DeathEvent, RespawnEvent, TotemPopEvent, EntityStatusEvent, PlayerJoinEvent, PlayerLeaveEvent,
+  ChatSendEvent, TitleEvent, SoundPlayEvent, ScreenOpenEvent, ScreenCloseEvent, ContainerOpenEvent, SlotUpdateEvent,
+  ItemPickupEvent, BlockBreakEvent, BlockInteractEvent, EntityInteractEvent, ItemUseEvent, ServerConnectEvent,
+  ServerDisconnectEvent, DimensionChangeEvent, BossBarEvent, ScoreboardEvent, VelocityEvent, ExplosionEvent,
+  TeleportEvent, MouseScrollEvent, BlockUpdateEvent
+  Отменяемые (e.cancel()): ChatReceiveEvent, ChatSendEvent, TitleEvent, SoundPlayEvent, ScreenOpenEvent, BlockBreakEvent,
+  BlockInteractEvent, EntityInteractEvent, ItemUseEvent, VelocityEvent, ExplosionEvent, MouseScrollEvent, AttackEvent, PacketReceiveEvent, PacketSendEvent
+
+=== КОНСТАНТЫ ===
+  Key.A..Key.Z, Key.NUM_0..NUM_9, Key.F1..F12, Key.SPACE, ENTER, TAB, ESCAPE, BACKSPACE, DELETE, UP, DOWN, LEFT, RIGHT,
+  Key.LEFT_SHIFT, LEFT_CONTROL, LEFT_ALT, MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, MOUSE_4, MOUSE_5
+  Priority.FIRST, EARLY, NORMAL, LATE, LAST
+  NotifyKind.OK, INFO, SUCCESS, WARN, FAIL, ERROR, ACCENT, ENABLE, DISABLE
+  ModuleCategory.COMBAT, MOVEMENT, RENDER, PLAYER, MISC
+  Key.INSERT, HOME, END, PAGE_UP, PAGE_DOWN, CAPS_LOCK, GRAVE, MINUS, EQUALS, COMMA, PERIOD, SLASH, NUMPAD_0..NUMPAD_9; строки для bind: "ctrl+shift+R", "mouse4", "lmb"
+  FIRST_PERSON, THIRD_PERSON_BACK, THIRD_PERSON_FRONT
+  Vec(x, y, z), AABB(x1, y1, z1, x2, y2, z2), Rotation(yaw, pitch)
+  Postfixes.PERCENT, DEGREES, SECONDS, TICKS, BLOCKS, MS, MULTIPLIER, HEALTH
+
+=== ОБЪЕКТЫ И ИХ МЕТОДЫ ===
+
+player:
+  absorption(): Float
+  airTicks(): Int
+  alive(): Boolean
+  armorItem(Int): ItemStack
+  armorItems(): List<ItemStack>
+  armorPoints(): Int
+  attackCooldown(): Float
+  belowMinimumAttackCharge(): Boolean
+  biome(): String
+  blockReachBlocks(): Double
+  blockX(): Int
+  blockY(): Int
+  blockZ(): Int
+  blocking(): Boolean
+  box(): AABB
+  climbing(): Boolean
+  creative(): Boolean
+  dead(): Boolean
+  dimension(): String
+  distanceTo(Vec): Double
+  distanceTo(Entity): Double
+  effect(String): Effect
+  effects(): List<Effect>
+  entityReachBlocks(): Double
+  eyePosition(): Vec
+  fallDistanceBlocks(): Float
+  flying(): Boolean
+  food(): Int
+  gameMode(): String
+  gliding(): Boolean
+  hasEffect(String): Boolean
+  hasMovementInput(): Boolean
+  health(): Float
+  height(): Float
+  held(): String
+  hurtTicks(): Int
+  id(): Int
+  inLava(): Boolean
+  inWater(): Boolean
+  isNaked(): Boolean
+  itemUseTicks(): Int
+  mainHandItem(): ItemStack
+  maxHealth(): Float
+  name(): String
+  offHandItem(): ItemStack
+  onGround(): Boolean
+  pingMs(): Int
+  pitch(): Float
+  position(): Vec
+  present(): Boolean
+  previousPosition(): Vec
+  renderPosition(): Vec
+  respawn(): Unit
+  riding(): Boolean
+  rotation(): Rotation
+  saturation(): Float
+  sneaking(): Boolean
+  sprinting(): Boolean
+  swimming(): Boolean
+  totemPops(): Int
+  usingHand(): String
+  usingItem(): Boolean
+  usingRiptide(): Boolean
+  uuid(): String
+  velocity(): Vec
+  width(): Float
+  x(): Double
+  xpLevel(): Int
+  xpProgress(): Float
+  y(): Double
+  yaw(): Float
+  z(): Double
+
+Effect (player.effects()):
+  amplifier(): Int
+  beneficial(): Boolean
+  durationTicks(): Int
+  id(): String
+  infinite(): Boolean
+  name(): String
+
+world:
+  biome(Int, Int, Int): String
+  biomeHere(): String
+  block(Int, Int, Int): Block
+  block(Vec): Block
+  block(Double, Double, Double): Block
+  blockBelow(): Block
+  blockEntities(Double, String): List<BlockEntityInfo>
+  blockEntities(Double): List<BlockEntityInfo>
+  blockEntityAt(Int, Int, Int): String
+  blockLight(Int, Int, Int): Int
+  blocksIn(AABB): List<Block>
+  dayTime(): Long
+  dimension(): String
+  entities(): List<Entity>
+  entitiesNear(Vec, Double): List<Entity>
+  entitiesNear(Vec, Double, Filter): List<Entity>
+  entityById(Int): Entity
+  entityByUuid(String): Entity
+  entityCount(): Int
+  findBlocks(Vec, Int, List<String>): List<Block>
+  findBlocks(Vec, Int, String): List<Block>
+  findBlocks(Vec, Int, Predicate<Block>): List<Block>
+  highestBlockY(Int, Int): Int
+  isDay(): Boolean
+  isFree(AABB): Boolean
+  isLoaded(Int, Int): Boolean
+  isRaining(): Boolean
+  isThundering(): Boolean
+  lightHere(): Int
+  lightLevel(Int, Int, Int): Int
+  loaded(): Boolean
+  maxY(): Int
+  minY(): Int
+  moonPhase(): Int
+  nearestBlock(Vec, Int, String): Block
+  nearestEntity(Vec, Double, Filter): Entity
+  playSound(String, Float, Float): Unit
+  playSoundAt(String, Vec, Float, Float): Unit
+  playerByName(String): Entity
+  players(): List<Entity>
+  query(): EntityQuery
+  queryPlayers(): EntityQuery
+  skyLight(Int, Int, Int): Int
+  time(): Long
+  weather(): String
+
+Entity:
+  absorption(): Float
+  age(): Int
+  alive(): Boolean
+  armor(): List<ItemInfo>
+  armorDurabilityPercent(): Float
+  armorPieces(): Int
+  armorPoints(): Int
+  asLiving(): Entity
+  baby(): Boolean
+  blockX(): Int
+  blockY(): Int
+  blockZ(): Int
+  blocking(): Boolean
+  box(): AABB
+  displayName(): String
+  distanceTo(Vec): Double
+  distanceToPlayer(): Double
+  effectLevel(String): Int
+  effectTicks(String): Int
+  effects(): List<String>
+  equipment(String): ItemInfo
+  eyePosition(): Vec
+  gameMode(): String
+  gliding(): Boolean
+  glowing(): Boolean
+  hasCustomName(): Boolean
+  hasEffect(String): Boolean
+  headYaw(): Float
+  health(): Float
+  healthPercent(): Float
+  height(): Float
+  held(): String
+  horizontalSpeed(): Double
+  hurtTicks(): Int
+  id(): Int
+  inFov(Float): Boolean
+  inLava(): Boolean
+  inTab(): Boolean
+  inWater(): Boolean
+  invisible(): Boolean
+  isA(String): Boolean
+  isAlly(): Boolean
+  isAnimal(): Boolean
+  isArmorStand(): Boolean
+  isBot(): Boolean
+  isFriend(): Boolean
+  isItem(): Boolean
+  isLiving(): Boolean
+  isMonster(): Boolean
+  isPlayer(): Boolean
+  isProjectile(): Boolean
+  isSelf(): Boolean
+  itemCount(): Int
+  itemId(): String
+  lookingAtPlayer(Float): Boolean
+  mainHandItem(): ItemStack
+  maxHealth(): Float
+  name(): String
+  offHand(): String
+  offHandItem(): ItemStack
+  onFire(): Boolean
+  onGround(): Boolean
+  passengers(): List<Entity>
+  pingMs(): Int
+  pitch(): Float
+  position(): Vec
+  previousPosition(): Vec
+  renderPosition(): Vec
+  riding(): Boolean
+  sneaking(): Boolean
+  speed(): Double
+  sprinting(): Boolean
+  squaredDistanceTo(Vec): Double
+  swimming(): Boolean
+  totalHealth(): Float
+  totemPops(): Int
+  type(): String
+  usingItem(): Boolean
+  uuid(): String
+  vehicle(): Entity
+  velocity(): Vec
+  width(): Float
+  x(): Double
+  y(): Double
+  yaw(): Float
+  yawFromPlayer(): Float
+  z(): Double
+
+Block:
+  air(): Boolean
+  blocksMovement(): Boolean
+  box(): AABB
+  center(): Vec
+  distanceTo(Vec): Double
+  distanceToPlayer(): Double
+  down(): Block
+  east(): Block
+  hardness(): Float
+  id(): String
+  isA(String): Boolean
+  isAny(List<String>): Boolean
+  liquid(): Boolean
+  name(): String
+  neighbours(): List<Block>
+  north(): Block
+  offset(Int, Int, Int): Block
+  pos(): BlockPos
+  position(): Vec
+  properties(): Map<String, String>
+  property(String): String
+  replaceable(): Boolean
+  solid(): Boolean
+  south(): Block
+  unbreakable(): Boolean
+  up(): Block
+  west(): Block
+  x(): Int
+  y(): Int
+  z(): Int
+
+filters:
+  allies(): Filter
+  any(): Filter
+  attackable(): Filter
+  enemyPlayers(): Filter
+  living(): Filter
+  ofType(String): Filter
+  players(): Filter
+
+control:
+  attackKey(Boolean): Unit
+  backward(Boolean): Unit
+  forward(Boolean): Unit
+  jump(Boolean): Unit
+  jump(): Unit
+  left(Boolean): Unit
+  look(Float, Float): Unit
+  lookAt(Vec): Unit
+  lookAt(Entity): Unit
+  move(Float, Float): Unit
+  releaseAll(): Unit
+  releaseMovement(): Unit
+  right(Boolean): Unit
+  sneak(Boolean): Unit
+  sneaking(Boolean): Unit
+  sprint(Boolean): Unit
+  sprinting(Boolean): Unit
+  stepTowards(Float, Float, Float): Boolean
+  stopAll(): Unit
+  useKey(Boolean): Unit
+  velocity(Double, Double, Double): Unit
+  walkTowards(Vec): Unit
+
+interaction:
+  attack(Entity): Unit
+  attackCrosshair(): Unit
+  breakBlock(Int, Int, Int, String): Unit
+  breaking(): Boolean
+  interactEntity(Entity, String): Unit
+  placeAt(Int, Int, Int, String): Unit
+  placeBlock(Int, Int, Int, String, String): Unit
+  startBreaking(Int, Int, Int, String): Unit
+  stopBreaking(): Unit
+  stopUsingItem(): Unit
+  swing(String): Unit
+  useItem(String): Unit
+  useOnBlock(Int, Int, Int, String, String): Unit
+
+inventory:
+  armor(): List<ItemInfo>
+  bestSlot(ToDoubleFunction<ItemInfo>): Int
+  busy(): Boolean
+  close(): Unit
+  count(Int): Int
+  drop(Int): Unit
+  dropAll(String): Int
+  dropHeld(Boolean): Unit
+  dropStack(Int): Unit
+  emptySlots(): Int
+  equip(String): Boolean
+  equip(Int): Boolean
+  find(String): Int
+  find(Predicate<ItemInfo>): Int
+  findAll(String): List<Int>
+  findByName(String): Int
+  findInHotbar(String): Int
+  firstEmpty(): Int
+  firstEmptyHotbar(): Int
+  full(): Boolean
+  has(String): Boolean
+  held(): String
+  heldItem(): ItemInfo
+  hotbar(): List<ItemInfo>
+  inventoryOpen(): Boolean
+  item(Int): String
+  items(): List<ItemInfo>
+  menuSlot(Int): Int
+  move(Int, Int): Unit
+  moveToHotbar(String, Int): Boolean
+  offhandItem(): ItemInfo
+  open(): Unit
+  quickMove(Int): Unit
+  scroll(Int): Unit
+  select(String): Boolean
+  selectSlot(Int): Unit
+  selectedSlot(): Int
+  stack(Int): ItemInfo
+  swap(Int, Int): Unit
+  swapHands(): Unit
+  swapOffhand(Int): Unit
+  toOffhand(String): Boolean
+  total(String): Int
+
+rotations:
+  current(): Rotation
+  distance(Rotation, Rotation): Float
+  lookAt(Entity): Rotation
+  lookAt(Vec): Rotation
+  yawDifference(Float, Float): Float
+
+Rotation:
+  direction(): Vec
+  pitch(): Float
+  yaw(): Float
+
+raycast:
+  blocks(Vec, Vec, String, String): Hit
+  canSee(Vec, Vec): Boolean
+  crosshair(Double): Hit
+  crosshair(Double, Boolean, Filter): Hit
+  crosshair(Double, Boolean): Hit
+  entityAtCrosshair(Double, Filter): Entity
+  entityAtCrosshair(Double): Entity
+  from(Rotation, Double, Boolean): Hit
+  from(Rotation, Double, Boolean, Filter): Hit
+  hitOn(Entity, Vec, Vec): Vec
+
+Hit:
+  distance(): Double
+  isBlock(): Boolean
+  isEntity(): Boolean
+  isMiss(): Boolean
+  position(): Vec
+
+Hit.OnBlock:
+  blockX(): Int
+  blockY(): Int
+  blockZ(): Int
+  distance(): Double
+  isBlock(): Boolean
+  isEntity(): Boolean
+  isMiss(): Boolean
+  position(): Vec
+  side(): String
+
+Hit.OnEntity:
+  distance(): Double
+  entity(): Entity
+  isBlock(): Boolean
+  isEntity(): Boolean
+  isMiss(): Boolean
+  position(): Vec
+
+chat:
+  print(Any): Unit
+  printPrefixed(String, Any): Unit
+  reply(String, Any): Unit
+  runCommand(String): Unit
+  sendToServer(String): Unit
+
+log:
+  debug(Any): Unit
+  debugEnabled(): Boolean
+  debugEnabled(Boolean): Unit
+  error(Any): Unit
+  error(Any, Throwable): Unit
+  every(String, Long, Any): Unit
+  info(Any): Unit
+  measure(String, () -> Unit): Double
+  printTimings(): Unit
+  resetTimings(): Unit
+  start(String): Unit
+  stop(String): Double
+  timings(): Map<String, String>
+  warn(Any): Unit
+
+text:
+  empty(): Text
+  fromJson(String): Text
+  legacy(String): Text
+  literal(String): Text
+  translatable(String, vararg Any): Text
+
+Text:
+  append(String): Text
+  append(Text): Text
+  bold(Boolean): Text
+  build(): MutableComponent
+  color(Int): Text
+  copy(): Text
+  copyToClipboard(String): Text
+  font(String): Text
+  hoverItem(ItemStack): Text
+  hoverText(String): Text
+  hoverText(Text): Text
+  insertion(String): Text
+  italic(Boolean): Text
+  obfuscated(Boolean): Text
+  openUrl(String): Text
+  runCommand(String): Text
+  strikethrough(Boolean): Text
+  string(): String
+  suggestCommand(String): Text
+  toJson(): String
+  underlined(Boolean): Text
+
+client:
+  actionBar(Any): Unit
+  apiVersion(): Int
+  clearTitle(): Unit
+  clipboard(String): Unit
+  clipboard(): String
+  command(String): Unit
+  commands(): List<String>
+  configs(): ClientApi.Configs
+  date(String): String
+  disconnect(): Unit
+  focused(): Boolean
+  fps(): Float
+  inGame(): Boolean
+  maxMemoryMb(): Long
+  millis(): Long
+  modules(): ClientApi.Modules
+  nanos(): Long
+  onClientThread(): Boolean
+  playUiSound(String, Float): Unit
+  playerName(): String
+  screenHeight(): Float
+  screenWidth(): Float
+  scriptModules(): List<String>
+  singleplayer(): Boolean
+  tickDelta(): Float
+  title(Any, Any, Int, Int, Int): Unit
+  usedMemoryMb(): Long
+  version(): String
+  windowHeight(): Int
+  windowWidth(): Int
+
+client.modules():
+  all(): List<ClientApi.Module>
+  exists(String): Boolean
+  find(String): ClientApi.Module
+  get(String): ClientApi.Module
+
+Module:
+  bind(): Int
+  bind(Int): Unit
+  bindName(): String
+  category(): String
+  checkBox(String): Check
+  colorPicker(String): Color
+  combo(String): Combo
+  description(): String
+  displayName(): String
+  enabled(): Boolean
+  favorite(): Boolean
+  fromScript(): Boolean
+  get(String): String
+  holdMode(): Boolean
+  holdMode(Boolean): Unit
+  input(String): Input
+  name(): String
+  selectable(String): Select
+  set(String, Any): Unit
+  setEnabled(Boolean): Unit
+  settingType(String): String
+  settings(): List<String>
+  slider(String): Slide
+  toggle(): Unit
+  values(): Map<String, String>
+
+game:
+  closeScreen(): Unit
+  control(): Control
+  game.kindOf(Screen): String
+  packets(): Packets
+  screenKind(): String
+  screenOpen(): Boolean
+  screenTitle(): Text
+  server(): Server
+  serverAddress(): String
+  serverName(): String
+  settings(): GameSettings
+  singleplayer(): Boolean
+
+game.server():
+  address(): String
+  bossBar(String): BossBar
+  bossBars(): List<BossBar>
+  brand(): String
+  connected(): Boolean
+  lagMillis(): Long
+  lagging(): Boolean
+  motd(): String
+  name(): String
+  onlineCount(): Int
+  pingMs(): Int
+  scoreboard(): Scoreboard
+  singleplayer(): Boolean
+  tabList(): TabList
+  tps(): Double
+
+TabList:
+  contains(String): Boolean
+  find(String): TabPlayer
+  footer(): String
+  header(): String
+  names(): List<String>
+  players(): List<TabPlayer>
+  size(): Int
+
+TabPlayer:
+  displayName(): String
+  gameMode(): String
+  isFriend(): Boolean
+  name(): String
+  pingMs(): Int
+  pingMs(Int): Unit
+  team(): String
+  uuid(): UUID
+
+gameSettings:
+  mouseSensitivity(Double): Unit
+  mouseSensitivity(): Double
+  perspective(CameraType): Unit
+  perspective(): CameraType
+  scaleFactor(): Double
+
+keys:
+  allDown(int[]): Boolean
+  alt(): Boolean
+  anyDown(int[]): Boolean
+  code(String): Int
+  ctrl(): Boolean
+  inputBlocked(): Boolean
+  isDown(Int): Boolean
+  isDown(String): Boolean
+  isMouse(Int): Boolean
+  mouseDown(Int): Boolean
+  mouseX(): Float
+  mouseY(): Float
+  name(Int): String
+  shift(): Boolean
+
+storage / config(name):
+  clear(): Unit
+  delete(): Unit
+  get(String, String): String
+  getBoolean(String, Boolean): Boolean
+  getDouble(String, Double): Double
+  getInt(String, Int): Int
+  getLong(String, Long): Long
+  has(String): Boolean
+  keys(): List<String>
+  load(): Unit
+  put(String, Int): Unit
+  put(String, String): Unit
+  put(String, Boolean): Unit
+  put(String, Double): Unit
+  put(String, Long): Unit
+  remove(String): Unit
+  save(): Unit
+
+configs:
+  delete(String): Boolean
+  exists(String): Boolean
+  names(): List<String>
+
+assets:
+  append(String, String): Unit
+  bytes(String): byte[]
+  delete(String): Boolean
+  exists(String): Boolean
+  folder(): String
+  assets.folderOf(String): File
+  image(String): ScriptImage
+  lines(String): List<String>
+  list(): List<String>
+  assets.listOf(String): List<String>
+  pairs(String): Map<String, String>
+  randomLine(String): String
+  rawLines(String): List<String>
+  releaseImages(): Unit
+  assets.resolve(String, String): File
+  assets.root(): File
+  text(String): String
+  textOr(String, String): String
+  write(String, String): Unit
+  writeBytes(String, byte[]): Unit
+  writeLines(String, List<String>): Unit
+
+timer():
+  elapsedMillis(): Long
+  elapsedTicks(): Long
+  passed(Long): Boolean
+  passedAndReset(Long): Boolean
+  passedMillis(Long): Boolean
+  passedMillisAndReset(Long): Boolean
+  reset(): Unit
+
+Task (afterTicks / everyTicks):
+  cancel(): Unit
+  cancelled(): Boolean
+  done(): Boolean
+
+checkBox:
+  name(): String
+  onChange((Boolean) -> Unit): Check
+  toggle(): Unit
+  value(Boolean): Unit
+  value(): Boolean
+  visibleWhen(() -> Boolean): this
+
+slider:
+  intValue(): Int
+  isInteger(): Boolean
+  max(): Float
+  min(): Float
+  name(): String
+  onChange((Float) -> Unit): Slide
+  postfix(): String
+  postfix(String): Slide
+  step(): Float
+  value(Float): Unit
+  value(): Float
+  visibleWhen(() -> Boolean): this
+
+rangeSlider:
+  from(): Float
+  max(): Float
+  min(): Float
+  name(): String
+  onChange((Float, Float) -> Unit): Range
+  postfix(String): Range
+  to(): Float
+  value(Float, Float): Unit
+  visibleWhen(() -> Boolean): this
+
+input:
+  name(): String
+  onChange((String) -> Unit): Input
+  value(String): Unit
+  value(): String
+  visibleWhen(() -> Boolean): this
+
+selectable:
+  has(String): Boolean
+  is(String): Boolean
+  name(): String
+  onChange((String) -> Unit): Select
+  options(): List<String>
+  select(String): Unit
+  selected(): String
+  value(String): Unit
+  value(): String
+  visibleWhen(() -> Boolean): this
+
+combo:
+  has(String): Boolean
+  name(): String
+  onChange((List<String>) -> Unit): Combo
+  options(): List<String>
+  set(String, Boolean): Unit
+  value(List<String>): Unit
+  value(): List<String>
+  visibleWhen(() -> Boolean): this
+
+colorPicker:
+  name(): String
+  onChange((Int) -> Unit): Color
+  value(Int): Unit
+  value(): Int
+  visibleWhen(() -> Boolean): this
+
+hotkey:
+  name(): String
+  trigger(): Unit
+  value(Int): Unit
+  value(): Int
+  visibleWhen(() -> Boolean): this
+
+button:
+  click(): Unit
+  name(): String
+  press(): Unit
+  visibleWhen(() -> Boolean): this
+
+Render2DEvent:
+  cancel(): Unit
+  height(): Float
+  render(): Draw2D
+  tickDelta(): Float
+  width(): Float
+
+Render2DEvent.render():
+  arc(Float, Float, Float, Float, Float, Int): Unit
+  arc(Float, Float, Float, Float, Float, Int, Float): Unit
+  arrowTo(Vec, Float, Float, Int): Unit
+  blur(Float, Float, Float, Float, Float): Unit
+  blur(Float, Float, Float, Float, Float, Int): Unit
+  boldText(Float, Float, Float, Any, Int): Unit
+  boldTextWidth(Any, Float): Float
+  centerX(): Float
+  centerY(): Float
+  centeredText(Float, Float, Float, Any, Int): Unit
+  centredText(Float, Float, Float, Any, Int): Unit
+  circle(Float, Float, Float, Int): Unit
+  circleOutline(Float, Float, Float, Int, Float): Unit
+  clipped(Float, Float, Float, Float, () -> Unit): Unit
+  crosshair(Float, Float, Float, Int): Unit
+  entityBox2D(Entity, Int, Float): Unit
+  entityCorners2D(Entity, Int, Float): Unit
+  entityItems(Entity, Float): Unit
+  flush(): Unit
+  glow(Float, Float, Float, Float, Float, Int): Unit
+  gradient(Float, Float, Float, Float, Int, Int, Int, Int): Unit
+  gradientLine(Float, Float, Float, Float, Float, Int, Int): Unit
+  gradientText(Float, Float, Float, Any, Int, Int): Unit
+  head(Entity, Float, Float, Float, Float): Unit
+  healthBar2D(Entity, Float): Unit
+  height(): Float
+  horizontalGradient(Float, Float, Float, Float, Float, Int, Int): Unit
+  hovered(Float, Float, Float, Float): Boolean
+  image(ScriptImage, Float, Float, Float, Float, Float, Int): Unit
+  image(ScriptImage, Float, Float, Float, Float): Unit
+  item(ItemStack, Float, Float, Float): Unit
+  item(ItemInfo, Float, Float, Float): Unit
+  item(String, Float, Float, Float): Unit
+  label(Float, Float, Float, Any, Int, Int, Float): Unit
+  line(Float, Float, Float, Float, Float, Int): Unit
+  mouseX(): Float
+  mouseY(): Float
+  multilineText(Float, Float, Float, Any, Int, Float): Float
+  nametag(Entity, Any, Float, Int, Int): Unit
+  onScreen(Vec): Boolean
+  outline(Float, Float, Float, Float, Int, Float): Unit
+  panel(Float, Float, Float, Float, Float, Int, Int): Unit
+  polygon(List<Vec>, Int): Unit
+  polyline(List<Vec>, Float, Int, Boolean): Unit
+  pop(): Unit
+  popClip(): Unit
+  progressBar(Float, Float, Float, Float, Float, Int, Int): Unit
+  project(Vec): Vec
+  push(): Unit
+  pushClip(Float, Float, Float, Float): Unit
+  rainbowText(Float, Float, Float, Any, Long): Unit
+  rect(Float, Float, Float, Float, Int): Unit
+  regularPolygon(Float, Float, Float, Int, Float, Int): Unit
+  rightText(Float, Float, Float, Any, Int): Unit
+  rotate(Float, Float, Float): Unit
+  roundedGradient(Float, Float, Float, Float, Float, Int, Int, Int, Int): Unit
+  roundedOutline(Float, Float, Float, Float, Float, Int, Float): Unit
+  roundedRect(Float, Float, Float, Float, Float, Float, Float, Float, Int): Unit
+  roundedRect(Float, Float, Float, Float, Float, Int): Unit
+  scale(Float, Float, Float): Unit
+  scale(Float, Float): Unit
+  screenBox(Entity): float[]
+  screenBox(AABB): float[]
+  selfHead(Float, Float, Float, Float): Unit
+  shader(Shader, Float, Float, Float, Float): Unit
+  shader(Shader, Float, Float, Float, Float, Int): Unit
+  shadow(Float, Float, Float, Float, Float, Float, Float, Int): Unit
+  shadowText(Float, Float, Float, Any, Int): Unit
+  text(Float, Float, Float, Any, Int): Unit
+  textHeight(Float): Float
+  textWidth(Any, Float): Float
+  transformed(() -> Unit): Unit
+  translate(Float, Float): Unit
+  triangle(Float, Float, Float, Float, Float, Float, Int): Unit
+  verticalGradient(Float, Float, Float, Float, Float, Int, Int): Unit
+  width(): Float
+  withAlpha(Float, () -> Unit): Unit
+  worldItem(Vec, ItemStack, Float): Unit
+  worldItem(Vec, String, Float): Unit
+  worldText(Vec, Any, Float, Int, Int): Unit
+
+Render3DEvent:
+  camera(): Vec
+  cancel(): Unit
+  render(): ScriptRender.Draw3D
+  tickDelta(): Float
+
+Render3DEvent.render():
+  additive(Boolean): ScriptRender.Draw3D
+  beam(Vec, Double, Int, Int, Float): Unit
+  block(Block, Int, Int, Boolean): Unit
+  blockBox(Int, Int, Int, Int, Boolean): Unit
+  box(AABB, Int, Boolean): Unit
+  box(AABB, Int, Boolean, Float): Unit
+  cameraPosition(): Vec
+  circle(Vec, Double, Int, Float, Int): Unit
+  circle(Vec, Double, Int, Float): Unit
+  cross(Vec, Double, Int, Float): Unit
+  cylinder(Vec, Double, Double, Int, Float): Unit
+  entityBox(Entity, Int, Boolean): Unit
+  entityCircle(Entity, Int, Float, Double): Unit
+  entityFilledBox(Entity, Int, Int, Boolean): Unit
+  entityTracer(Entity, Int, Boolean): Unit
+  filledBlock(Int, Int, Int, Int, Boolean): Unit
+  filledBox(AABB, Int, Boolean): Unit
+  filledCircle(Vec, Double, Int): Unit
+  flush(): Unit
+  gradientBox(AABB, Int, Int, Boolean): Unit
+  gradientCircle(Vec, Double, Float, Long): Unit
+  gradientLine(Vec, Vec, Int, Int, Float): Unit
+  line(Vec, Vec, Int, Boolean, Float): Unit
+  line(Vec, Vec, Int, Boolean): Unit
+  lineWidth(Float): ScriptRender.Draw3D
+  outlinedBox(AABB, Int, Int, Boolean): Unit
+  path(List<Vec>, Int, Float): Unit
+  polygon(List<Vec>, Int, Boolean): Unit
+  quad(Vec, Vec, Vec, Vec, Int, Boolean): Unit
+  sphere(Vec, Double, Int, Float): Unit
+  tracer(Vec, Int, Boolean): Unit
+  triangle(Vec, Vec, Vec, Int, Boolean): Unit
+
+command(name) { ... }:
+  alias(String): Builder
+  completes(Int, vararg String): Builder
+  description(String): Builder
+  name(): String
+  usage(String): Builder
+
+runs { ... }:
+  arg(Int): String
+  argCount(): Int
+  argOr(Int, String): String
+  args(): List<String>
+  booleanArg(Int): Boolean
+  doubleArg(Int): Double
+  intArg(Int): Int
+  label(): String
+  reply(Any): Unit
+  replyError(Any): Unit
+  rest(): String
+  rest(Int): String
+
+PacketReceiveEvent / PacketSendEvent:
+  cancel(): Unit
+  packet(): Packet<?>
+  type(): String
+
+game.packets():
+  send(Packet<?>): Boolean
+  sendSequenced(Packet<?>): Boolean
+
+EntitySpawnEvent / EntityRemoveEvent:
+  cancel(): Unit
+  entity(): Entity
+
+WorldLoadEvent:
+  cancel(): Unit
+  dimension(): String
+
+ModuleToggleEvent:
+  cancel(): Unit
+  enabled(): Boolean
+  fromScript(): Boolean
+  isModule: Boolean
+  isScript: Boolean
+  name(): String
+
+RotationEvent / SyncEvent:
+  cancel(): Unit
+  pitch: Float  (можно менять)
+  yaw: Float  (можно менять)
+
+MoveInputEvent:
+  cancel(): Unit
+  forward: Float  (можно менять)
+  strafe: Float  (можно менять)
+  isJump: Boolean  (можно менять)
+  isSneak: Boolean  (можно менять)
+  isSprint: Boolean  (можно менять)
+
+LookEvent:
+  cancel(): Unit
+  originalPitch: Double
+  originalYaw: Double
+  pitch: Double  (можно менять)
+  xRot: Float  (можно менять)
+  yRot: Float  (можно менять)
+  yaw: Double  (можно менять)
+
+AttackEvent:
+  cancel(): Unit
+  player: Player
+  target: Entity
+
+KeyEvent:
+  cancel(): Unit
+  action: Int
+
+ChatReceiveEvent:
+  cancel(): Unit
+  component: Component
+  message: String
+  replacement: Component
+  source: GuiMessageSource
+  replace(String): Unit
+  replace(Component): Unit
+
+module(name, category) { ... }:
+  active(): Boolean
+  active(Boolean): Unit
+  button(String, () -> Unit): Button
+  module(name, category) { ... }.category(String): ModuleCategory
+  category(): ModuleCategory
+  description(String): ScriptModule
+  description(): String
+  disable(): Unit
+  enable(): Unit
+  holdMode(Boolean): ScriptModule
+  hotkey(String, Int, () -> Unit): Hotkey
+  id(): String
+  isEnabled(): Boolean
+  isFavorite(): Boolean
+  key(Int): ScriptModule
+  key(): Int
+  name(): String
+  module(name, category) { ... }.names(): List<String>
+  on(Class<T>, Int, Boolean, (T) -> Unit): Unit
+  onDisable(() -> Unit): Unit
+  onDisable(): Unit
+  onEnable(() -> Unit): Unit
+  onEnable(): Unit
+  onTick(): Unit
+  onTick(() -> Unit): Unit
+  script(): ScriptInstance
+  scriptSettings(): List<this
+  setEnabled(Boolean): Unit
+  setKey(Int): Unit
+  setting(Check, T): T
+  setting(T): T
+  suffix(String): ScriptModule
+  suffix(): String
+  ticksEnabled(): Long
+  toggle(): Unit
+
+KeyBind (bind / bindHold):
+  active(Boolean): Unit
+  active(): Boolean
+  alt(): Boolean
+  ctrl(): Boolean
+  held(): Boolean
+  heldMillis(): Long
+  heldTicks(): Int
+  inScreens(Boolean): KeyBind
+  key(): Int
+  name(): String
+  onPress(() -> Unit): KeyBind
+  onRelease(() -> Unit): KeyBind
+  repeat(Boolean): KeyBind
+  shift(): Boolean
+  unbind(): Unit
+  whileHeld(() -> Unit): KeyBind
+
+hud(name) { ... }:
+  background(Boolean): ScriptHud
+  hud(name) { ... }.cancelActiveDrag(): Unit
+  cancelDrag(): Unit
+  getHeight(): Float
+  getWidth(): Float
+  getX(): Float
+  getY(): Float
+  height(): Float
+  isDragging(): Boolean
+  isEnabled(): Boolean
+  isHovered(Float, Float): Boolean
+  isSecretElement(): Boolean
+  position(Float, Float): ScriptHud
+  render((HudFrame) -> Unit): ScriptHud
+  render(GuiGraphicsExtractor, Float, Float, Float): Unit
+  setEnabled(Boolean): Unit
+  setPosition(Float, Float): Unit
+  setX(Float): Unit
+  setY(Float): Unit
+  size(Float, Float): ScriptHud
+  title(): String
+  width(): Float
+  x(): Float
+  y(): Float
+
+HudFrame (внутри hud { }):
+  alpha(): Float
+  background(): Unit
+  background(Float): Unit
+  editing(): Boolean
+  height(): Float
+  hovered(): Boolean
+  mouseX(): Float
+  mouseY(): Float
+  render(): Draw2D
+  size(Float, Float): Unit
+  width(): Float
+  x(): Float
+  y(): Float
+
+screen(title) { ... }:
+  button(String, () -> Unit): ScriptScreen.Button
+  canvas(Float, (ScreenCanvas) -> Unit): ScriptScreen.Custom
+  clear(): Unit
+  close(): Unit
+  closeOnOutsideClick(Boolean): ScriptScreen
+  dim(Boolean): ScriptScreen
+  isOpen(): Boolean
+  label(() -> String): ScriptScreen.Label
+  label(String): ScriptScreen.Label
+  onClose(() -> Unit): ScriptScreen
+  onOpen(() -> Unit): ScriptScreen
+  open(): Unit
+  pause(Boolean): ScriptScreen
+  remove(ScriptScreen.Widget): Unit
+  selector(String, List<String>, String, (String) -> Unit): ScriptScreen.Selector
+  separator(): ScriptScreen.Separator
+  slider(String, Float, Float, Float, Float, (Float) -> Unit): ScriptScreen.Slider
+  textInput(String, String, (String) -> Unit): ScriptScreen.TextInput
+  title(): String
+  toggle(): Unit
+  toggle(String, Boolean, (Boolean) -> Unit): ScriptScreen.Toggle
+  widgets(): List<ScriptScreen.Widget>
+  width(Float): ScriptScreen
+
+ScriptScreen.Toggle:
+  value(Boolean): Unit
+  value(): Boolean
+
+ScriptScreen.Slider:
+  intValue(): Int
+  value(Float): Unit
+  value(): Float
+
+ScriptScreen.TextInput:
+  focus(): Unit
+  focused(): Boolean
+  maxLength(Int): ScriptScreen.TextInput
+  onSubmit((String) -> Unit): ScriptScreen.TextInput
+  value(String): Unit
+  value(): String
+
+ScriptScreen.Selector:
+  value(String): Unit
+  value(): String
+
+ScriptScreen.Label:
+  centered(Boolean): ScriptScreen.Label
+  color(Int): ScriptScreen.Label
+  size(Float): ScriptScreen.Label
+
+ScreenCanvas (canvas(h) { c -> }):
+  height(): Float
+  hovered(): Boolean
+  mouseX(): Float
+  mouseY(): Float
+  render(): Draw2D
+  width(): Float
+  x(): Float
+  y(): Float
+
+http:
+  encode(String): String
+  get(String, (HttpResponse) -> Unit): Unit
+  get(String, Map<String, String>, (HttpResponse) -> Unit): Unit
+  header(String, String): Unit
+  pending(): Int
+  post(String, String, String, (HttpResponse) -> Unit): Unit
+  postForm(String, Map<String, Any>, (HttpResponse) -> Unit): Unit
+  postJson(String, Any, (HttpResponse) -> Unit): Unit
+  http.redact(String, String): String
+  request(String, String, String, String, Map<String, String>, Long, (HttpResponse) -> Unit): Unit
+  http.sendBlocking(String, String, byte[], String, Map<String, String>, Long, String): HttpResponse
+
+HttpResponse:
+  body(): String
+  error(): String
+  failed(): Boolean
+  header(String): String
+  headers(): Map<String, String>
+  json(): Any
+  jsonArray(): List<Any>
+  jsonObject(): Map<String, Any>
+  lines(): List<String>
+  millis(): Long
+  ok(): Boolean
+  status(): Int
+  text(): String
+
+Job (launch { }):
+  active(): Boolean
+  cancel(): Unit
+  cancelled(): Boolean
+  done(): Boolean
+  error(): String
+  failed(): Boolean
+  get(CoroutineContext.Key<E>): E
+  name(): String
+  runningMillis(): Long
+  whenDone(() -> Unit): Job
+
+ClickQueue (clickQueue(delay)):
+  busy(): Boolean
+  clear(): Unit
+  click(Int): ClickQueue
+  delay(Int): ClickQueue
+  delay(): Int
+  drop(Int): ClickQueue
+  dropAll(Int): ClickQueue
+  move(Int, Int): ClickQueue
+  onDone(() -> Unit): ClickQueue
+  pause(Boolean): Unit
+  rightClick(Int): ClickQueue
+  shiftClick(Int): ClickQueue
+  size(): Int
+  swap(Int, Int): ClickQueue
+  swapOffhand(Int): ClickQueue
+  then(() -> Unit): ClickQueue
+  waitTicks(Int): ClickQueue
+  waitUntil(BooleanSupplier): ClickQueue
+
+nav:
+  active(): Boolean
+  elytraTo(Int, Int, Int): Unit
+  elytraToXZ(Int, Int): Unit
+  follow(Entity, Double): Unit
+  goNear(Int, Int, Int, Double): Unit
+  goNear(Vec, Double): Unit
+  goTo(Int, Int, Int): Unit
+  goTo(Vec): Unit
+  goTo(Block): Unit
+  goToXZ(Int, Int): Unit
+  mine(Int, Int, Int): Unit
+  mine(Block): Unit
+  path(): List<Vec>
+  status(): String
+  stop(): Unit
+  task(): String
+
+friends:
+  add(String): Boolean
+  count(): Int
+  isFriend(Entity): Boolean
+  isFriend(String): Boolean
+  isLocal(String): Boolean
+  list(): List<String>
+  noFriendDamage(): Boolean
+  online(): List<Entity>
+  remove(String): Boolean
+  toggle(String): Boolean
+
+waypoints:
+  add(String, Int, Int, Int): Waypoint
+  addHere(String): Waypoint
+  all(): List<Waypoint>
+  clear(): Int
+  exists(String): Boolean
+  get(String): Waypoint
+  here(): List<Waypoint>
+  nearest(): Waypoint
+  remove(String): Boolean
+
+Waypoint:
+  dimension(): String
+  distanceToPlayer(): Double
+  here(): Boolean
+  name(): String
+  position(): Vec
+  server(): String
+  x(): Int
+  y(): Int
+  z(): Int
+
+container:
+  carried(): ItemInfo
+  click(Int): Unit
+  close(): Unit
+  containerItems(): List<ItemInfo>
+  containerSize(): Int
+  count(String): Int
+  doubleClick(Int): Unit
+  drop(Int): Unit
+  dropAll(Int): Unit
+  dropCarried(): Unit
+  find(String): Int
+  find(Predicate<ItemInfo>): Int
+  findAll(String): List<Int>
+  findByName(String): Int
+  firstEmpty(): Int
+  id(): Int
+  items(): List<ItemInfo>
+  lootAll(): Unit
+  move(Int, Int): Unit
+  open(): Boolean
+  quickMoveAll(String): Unit
+  rightClick(Int): Unit
+  shiftClick(Int): Unit
+  size(): Int
+  slot(Int): ItemInfo
+  swapWithHotbar(Int, Int): Unit
+  swapWithOffhand(Int): Unit
+  title(): String
+
+ItemInfo:
+  component(String): String
+  components(): List<String>
+  cooldown(): Float
+  count(): Int
+  customData(): String
+  customName(): String
+  damage(): Int
+  damageable(): Boolean
+  durability(): Int
+  durabilityPercent(): Float
+  empty(): Boolean
+  enchantLevel(String): Int
+  enchanted(): Boolean
+  enchantments(): Map<String, Int>
+  equipmentSlot(): String
+  full(): Boolean
+  hasComponent(String): Boolean
+  hasCustomName(): Boolean
+  hasEnchant(String): Boolean
+  id(): String
+  isA(String): Boolean
+  isArmor(): Boolean
+  isBlock(): Boolean
+  isFood(): Boolean
+  lore(): List<String>
+  loreContains(String): Boolean
+  maxCount(): Int
+  maxDamage(): Int
+  name(): String
+  nameContains(String): Boolean
+  nbt(): String
+  rarity(): String
+  slot(): Int
+
+game.server().scoreboard():
+  cleanLines(): List<String>
+  find(String): String
+  lines(): List<String>
+  present(): Boolean
+  scores(): Map<String, Int>
+  title(): String
+
+BossBar:
+  color(): String
+  name(): String
+  percent(): Int
+  progress(): Float
+  uuid(): String
+
+BlockEntityInfo (world.blockEntities):
+  block(): Block
+  center(): Vec
+  distanceToPlayer(): Double
+  isA(String): Boolean
+  type(): String
+  x(): Int
+  y(): Int
+  z(): Int
+
+clientConfigs / client.configs():
+  backup(): Unit
+  delete(String): Boolean
+  exists(String): Boolean
+  list(): List<String>
+  load(String): Unit
+  save(String): Unit
+
+shared:
+  call(String, List<Any>): Any
+  callOr(String, List<Any>, Any): Any
+  channels(): List<String>
+  functions(): List<String>
+  get(String, Any): Any
+  get(String): Any
+  getBoolean(String, Boolean): Boolean
+  getDouble(String, Double): Double
+  getInt(String, Int): Int
+  getString(String, String): String
+  has(String): Boolean
+  increment(String, Double): Double
+  keys(): List<String>
+  listen(String, (ScriptShared.Message) -> Unit): Unit
+  provide(String, Function<List<Any>, Any>): Unit
+  providerOf(String): String
+  provides(String): Boolean
+  put(String, Any): Unit
+  remove(String): Unit
+  send(String, Any): Int
+  snapshot(): Map<String, Any>
+  unlisten(String): Unit
+  unprovide(String): Unit
+
+HealthChangeEvent:
+  cancel(): Unit
+  damage(): Float
+  delta(): Float
+  food(): Int
+  healed(): Float
+  health(): Float
+  isDamage: Boolean
+  isHeal: Boolean
+  newHealth(): Float
+  oldHealth(): Float
+  saturation(): Float
+
+DamageEvent:
+  attacker(): Entity
+  byPlayer(): Boolean
+  cancel(): Unit
+  direct(): Entity
+  entity(): Entity
+  isSelf: Boolean
+  type(): String
+
+DeathEvent:
+  cancel(): Unit
+  message(): String
+  position(): Vec
+
+RespawnEvent:
+  cancel(): Unit
+  dimension(): String
+  dimensionChanged(): Boolean
+
+TotemPopEvent:
+  cancel(): Unit
+  entity(): Entity
+  isSelf: Boolean
+  name(): String
+  pops(): Int
+
+EntityStatusEvent:
+  cancel(): Unit
+  entity(): Entity
+  status(): Int
+
+PlayerJoinEvent / PlayerLeaveEvent:
+  cancel(): Unit
+  name(): String
+  uuid(): String
+
+ChatSendEvent:
+  cancel(): Unit
+  message: String  (можно менять)
+  isCommand: Boolean
+  modified(): Boolean
+  original(): String
+
+TitleEvent:
+  cancel(): Unit
+  component(): Component
+  isActionBar: Boolean
+  isSubtitle: Boolean
+  isTitle: Boolean
+  kind(): String
+  replace(String): Unit
+  replacement(): String
+  text(): String
+
+SoundPlayEvent:
+  cancel(): Unit
+  category(): String
+  contains(String): Boolean
+  distanceToPlayer(): Double
+  id(): String
+  isSound(String): Boolean
+  pitch(): Float
+  position(): Vec
+  volume(): Float
+
+ScreenOpenEvent:
+  cancel(): Unit
+  isChat: Boolean
+  isContainer: Boolean
+  kind(): String
+  screenClass(): String
+  title(): String
+
+ScreenCloseEvent:
+  cancel(): Unit
+  kind(): String
+  title(): String
+
+ContainerOpenEvent:
+  cancel(): Unit
+  containerId(): Int
+  title(): String
+  titleContains(String): Boolean
+  type(): String
+
+SlotUpdateEvent:
+  cancel(): Unit
+  containerId(): Int
+  item(): ItemInfo
+  playerInventory(): Boolean
+  slot(): Int
+
+ItemPickupEvent:
+  amount(): Int
+  cancel(): Unit
+  collector(): Entity
+  isSelf: Boolean
+  itemId(): String
+
+BlockBreakEvent:
+  block(): Block
+  cancel(): Unit
+  id(): String
+  x(): Int
+  y(): Int
+  z(): Int
+
+BlockInteractEvent:
+  block(): Block
+  cancel(): Unit
+  hand(): String
+  heldItem(): String
+  placing(): Boolean
+  side(): String
+  x(): Int
+  y(): Int
+  z(): Int
+
+EntityInteractEvent:
+  cancel(): Unit
+  entity(): Entity
+  hand(): String
+
+ItemUseEvent:
+  cancel(): Unit
+  hand(): String
+  isItem(String): Boolean
+  itemId(): String
+
+ServerConnectEvent:
+  address(): String
+  cancel(): Unit
+  singleplayer(): Boolean
+
+ServerDisconnectEvent:
+  address(): String
+  cancel(): Unit
+
+DimensionChangeEvent:
+  cancel(): Unit
+  from(): String
+  to(): String
+
+BossBarEvent:
+  cancel(): Unit
+  uuid(): String
+
+ScoreboardEvent:
+  cancel(): Unit
+  objective(): String
+  owner(): String
+  removed(): Boolean
+  score(): Int
+
+VelocityEvent:
+  cancel(): Unit
+  x: Double  (можно менять)
+  y: Double  (можно менять)
+  z: Double  (можно менять)
+  modified(): Boolean
+  motion(): Vec
+  original(): Vec
+  scale(Double, Double): Unit
+
+ExplosionEvent:
+  cancel(): Unit
+  center(): Vec
+  distanceToPlayer(): Double
+  hasKnockback(): Boolean
+  knockback(): Vec
+  radius(): Float
+
+TeleportEvent:
+  cancel(): Unit
+  distance(): Double
+  from(): Vec
+  to(): Vec
+
+MouseScrollEvent:
+  cancel(): Unit
+  down(): Boolean
+  horizontal(): Double
+  inScreen(): Boolean
+  up(): Boolean
+  vertical(): Double
+
+BlockUpdateEvent:
+  broken(): Boolean
+  cancel(): Unit
+  center(): Vec
+  newId(): String
+  oldId(): String
+  placed(): Boolean
+  x(): Int
+  y(): Int
+  z(): Int
+
+charts:
+  bars(Draw2D, List<? extends Number>, Float, Float, Float, Float, Int): Unit
+  chart(String): Chart
+  gauge(Draw2D, Float, Float, Float, Double, Double, Double, Int): Unit
+  nextColor(): Int
+  series(String, Int): Series
+  sparkline(Draw2D, Series, Float, Float, Float, Float): Unit
+  sparkline(Draw2D, Series, Float, Float, Float, Float, Int): Unit
+
+Series (series(name, capacity)):
+  add(Double): Series
+  add(Number): Series
+  avg(Int): Double
+  avg(): Double
+  capacity(): Int
+  clear(): Unit
+  color(Int): Series
+  color(Long): Series
+  color(): Int
+  decimals(): Int
+  decimals(Int): Series
+  delta(): Double
+  empty(): Boolean
+  get(Int): Double
+  last(): Double
+  max(): Double
+  min(): Double
+  name(): String
+  previous(): Double
+  size(): Int
+  sum(): Double
+  unit(): String
+  unit(String): Series
+  values(): List<Double>
+
+Chart (chart(title) { }):
+  area(Series): Chart
+  autoRange(): Chart
+  bar(Series): Chart
+  draw(Draw2D, Float, Float, Float, Float, Float, Float): Unit
+  draw(Draw2D, Float, Float, Float, Float): Unit
+  getAxisLabels(): Boolean
+  getBackground(): Boolean
+  getGrid(): Boolean
+  getGridLines(): Int
+  getIncludeZero(): Boolean
+  getLegend(): Boolean
+  getSmooth(): Boolean
+  getTextSize(): Float
+  getThickness(): Float
+  getTitle(): String
+  getTooltip(): Boolean
+  getXLabel(): String
+  line(Series): Chart
+  remove(Series): Chart
+  series(): List<Series>
+  setAxisLabels(Boolean): Unit
+  setBackground(Boolean): Unit
+  setGrid(Boolean): Unit
+  setGridLines(Int): Unit
+  setIncludeZero(Boolean): Unit
+  setLegend(Boolean): Unit
+  setSmooth(Boolean): Unit
+  setTextSize(Float): Unit
+  setThickness(Float): Unit
+  setTitle(String): Unit
+  setTooltip(Boolean): Unit
+  setXLabel(String): Unit
+  yMax(Double): Chart
+  yMin(Double): Chart
+  yRange(Double, Double): Chart
+
+ScreenshotOptions (screenshot { }):
+  getHideHud(): Boolean
+  getJpegQuality(): Float
+  getScale(): Double
+  onError((String) -> Unit): ScreenshotOptions
+  onReady((Screenshot) -> Unit): ScreenshotOptions
+  setHideHud(Boolean): Unit
+  setJpegQuality(Float): Unit
+  setScale(Double): Unit
+
+Screenshot:
+  bytes(String): byte[]
+  bytes(): byte[]
+  defaultName(): String
+  height(): Int
+  pixel(Int, Int): Int
+  save(String): ScriptImage
+  saveAs(String): String
+  sizeBytes(String): Int
+  takenAt(): Long
+  width(): Int
+
+discord:
+  close(): Unit
+  webhook(String): Webhook
+
+Webhook (discord.webhook(url)):
+  avatar(String): Webhook
+  clearQueue(): Unit
+  failed(): Int
+  pending(): Int
+  rateLimitedMillis(): Long
+  send(String, (HttpResponse) -> Unit): Unit
+  send(String): Unit
+  sendFile(String, byte[], String): Unit
+  sendImage(Screenshot, String): Unit
+  sendImage(Screenshot, String, (HttpResponse) -> Unit): Unit
+  sendText(String, String, String): Unit
+  sendWith((DiscordMessage) -> Unit): Unit
+  sent(): Int
+  username(String): Webhook
+
+DiscordMessage (webhook.send { }):
+  addEmbed((DiscordEmbed) -> Unit): DiscordEmbed
+  file(String, String, byte[]): DiscordMessage
+  file(String, byte[]): DiscordMessage
+  getAvatarUrl(): String
+  getContent(): String
+  getTts(): Boolean
+  getUsername(): String
+  image(Screenshot): DiscordMessage
+  image(Screenshot, String): DiscordMessage
+  onResult((HttpResponse) -> Unit): DiscordMessage
+  setAvatarUrl(String): Unit
+  setContent(String): Unit
+  setTts(Boolean): Unit
+  setUsername(String): Unit
+  text(String, String): DiscordMessage
+
+DiscordEmbed (embed { }):
+  author(String, String): DiscordEmbed
+  field(String, Any): DiscordEmbed
+  field(String, Any, Boolean): DiscordEmbed
+  footer(String, String): DiscordEmbed
+  getAuthor(): String
+  getColor(): Int
+  getDescription(): String
+  getFooter(): String
+  getImage(): String
+  getThumbnail(): String
+  getTitle(): String
+  getUrl(): String
+  imageAttachment(String): DiscordEmbed
+  setAuthor(String): Unit
+  setColor(Int): Unit
+  setFooter(String): Unit
+  setImage(String): Unit
+  setThumbnail(String): Unit
+  setTitle(String): Unit
+  setUrl(String): Unit
+  timestamp(): DiscordEmbed
+  timestamp(Long): DiscordEmbed
+
+telegram:
+  bot(String): TelegramBot
+  close(): Unit
+
+TelegramBot (telegram.bot(token)):
+  allowChat(Long): TelegramBot
+  allowed(): List<Long>
+  allowedChats(long[]): TelegramBot
+  commands(): List<String>
+  disallowChat(Long): TelegramBot
+  edit(Long, Int, String, TelegramKeyboard): Unit
+  isAllowed(Long): Boolean
+  keyboard(): TelegramKeyboard
+  onCallback(String, (TelegramCallback) -> Unit): TelegramBot
+  onCallback((TelegramCallback) -> Unit): TelegramBot
+  onCommand(String, (TelegramMessage) -> Unit): TelegramBot
+  onError((String) -> Unit): TelegramBot
+  onMessage((TelegramMessage) -> Unit): TelegramBot
+  pending(): Int
+  polling(): Boolean
+  received(): Int
+  send(Long, String): Unit
+  send(Long, String, String): Unit
+  send(Long, String, TelegramKeyboard): Unit
+  send(Long, String, String, TelegramKeyboard): Unit
+  sendDocument(Long, Screenshot, String): Unit
+  sendDocument(Long, String, byte[], String): Unit
+  sendPhoto(Long, Screenshot, String, (HttpResponse) -> Unit): Unit
+  sendPhoto(Long, Screenshot, String): Unit
+  sendText(Long, String, String, String): Unit
+  sendToAll(String): Unit
+  skipOldUpdates(Boolean): TelegramBot
+  start(): Unit
+  stop(): Unit
+  username(): String
+
+TelegramMessage:
+  args(): List<String>
+  command(): String
+  getChatId(): Long
+  getChatTitle(): String
+  getChatType(): String
+  getFrom(): String
+  getFromId(): Long
+  getMessageId(): Int
+  getText(): String
+  isCommand(): Boolean
+  reply(String): Unit
+  reply(String, String): Unit
+  reply(String, TelegramKeyboard): Unit
+  replyPhoto(Screenshot, String): Unit
+  rest(): String
+
+TelegramCallback:
+  answer(String): Unit
+  answer(String, Boolean): Unit
+  edit(String, TelegramKeyboard): Unit
+  edit(String): Unit
+  getChatId(): Long
+  getData(): String
+  getFrom(): String
+  getFromId(): Long
+  getMessageId(): Int
+  reply(String): Unit
+
+TelegramKeyboard (keyboard { }):
+  button(String, String): TelegramKeyboard
+  link(String, String): TelegramKeyboard
+  newRow(): TelegramKeyboard
+  row(vararg String): TelegramKeyboard
+
+assets:
+  append(String, String): Unit
+  bytes(String): byte[]
+  delete(String): Boolean
+  exists(String): Boolean
+  folder(): String
+  assets.folderOf(String): File
+  image(String): ScriptImage
+  lines(String): List<String>
+  list(): List<String>
+  assets.listOf(String): List<String>
+  pairs(String): Map<String, String>
+  randomLine(String): String
+  rawLines(String): List<String>
+  releaseImages(): Unit
+  assets.resolve(String, String): File
+  assets.root(): File
+  text(String): String
+  textOr(String, String): String
+  write(String, String): Unit
+  writeBytes(String, byte[]): Unit
+  writeLines(String, List<String>): Unit
+
+Colors:
+  Colors.alpha(Int): Int
+  Colors.blue(Int): Int
+  Colors.brighter(Int, Float): Int
+  Colors.brightness(Int): Float
+  Colors.darker(Int, Float): Int
+  Colors.fade(Int, Float): Int
+  Colors.fromName(String): Int
+  Colors.gradient(List<Int>, Float): Int
+  Colors.grayscale(Int): Int
+  Colors.green(Int): Int
+  Colors.health(Float): Int
+  Colors.hex(String): Int
+  Colors.hsb(Float, Float, Float): Int
+  Colors.hue(Int): Float
+  Colors.invert(Int): Int
+  Colors.mix(Int, Int, Float): Int
+  Colors.pulse(Int, Long, Float): Int
+  Colors.rainbow(): Int
+  Colors.rainbow(Long, Float): Int
+  Colors.rainbow(Long, Float, Float, Float): Int
+  Colors.random(): Int
+  Colors.red(Int): Int
+  Colors.rgb(Int, Int, Int): Int
+  Colors.rgba(Int, Int, Int, Int): Int
+  Colors.saturation(Int): Float
+  Colors.shiftHue(Int, Float): Int
+  Colors.toHex(Int): String
+  Colors.wave(Int, Int, Long, Float): Int
+  Colors.withAlpha(Int, Int): Int

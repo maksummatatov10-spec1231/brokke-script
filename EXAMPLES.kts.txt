@@ -1,0 +1,295 @@
+// TargetHud.kts - HUD с ближайшим игроком и 3D-рамкой
+name("Target HUD")
+val range by slider("Дистанция", 8f, 2f, 32f, 0.5f)
+val color by colorPicker("Цвет", 0xFF55FFFF)
+var target: Entity? = null
+on<ClientTickEvent> {
+    target = if (inGame) world.nearestEntity(player.position(), range.toDouble(), filters.enemyPlayers()) else null
+}
+on<Render2DEvent> { e ->
+    val t = target ?: return@on
+    val r = e.render()
+    val x = e.width() / 2f + 20f
+    val y = e.height() / 2f
+    r.roundedRect(x, y, 90f, 26f, 5f, Colors.rgba(10, 10, 15, 170))
+    r.text(x + 6f, y + 8f, 7f, t.name(), Colors.WHITE)
+    r.rect(x + 6f, y + 17f, 78f * (t.health() / t.maxHealth()), 3f, color)
+}
+on<Render3DEvent> { e -> target?.let { e.render().entityBox(it, color, true) } }
+
+// ChatCommand.kts - команда в чате и хранилище
+name("Счётчик")
+command("count") {
+    description("Счётчик вызовов")
+    runs {
+        val n = storage.getInt("n", 0) + 1
+        storage.put("n", n)
+        storage.save()
+        reply("Вызвано раз: " + n)
+    }
+}
+
+// AutoSprint.kts - изменение ввода
+name("Auto Sprint")
+on<MoveInputEvent> { e -> if (e.forward > 0f) e.isSprint = true }
+
+// FastFly.kts - настоящий модуль клиента: виден в ClickGUI (Movement), свой бинд и настройки
+name("FastFly")
+author("brokke")
+version("1.0")
+
+module("FastFly", ModuleCategory.MOVEMENT) {
+    description("Полёт с настраиваемой скоростью")
+    val speed by slider("Скорость", 1.5f, 0.1f, 5f, 0.1f)
+    val vertical by slider("Вертикаль", 0.5f, 0f, 2f, 0.05f)
+    val antiKick by checkBox("Анти-кик", true)
+
+    onEnable { notify("FastFly", "Полёт включён", NotifyKind.SUCCESS) }
+    onDisable { control.velocity(0.0, 0.0, 0.0) }
+
+    onTick {
+        if (!inGame) return@onTick
+        val yaw = Math.toRadians(player.yaw().toDouble())
+        val fwd = if (keys.isDown(Key.W)) 1.0 else if (keys.isDown(Key.S)) -1.0 else 0.0
+        var y = 0.0
+        if (keys.isDown(Key.SPACE)) y += vertical
+        if (keys.isDown(Key.LEFT_SHIFT)) y -= vertical
+        if (antiKick && ticksEnabled() % 40 == 0L) y -= 0.04
+        control.velocity(-Math.sin(yaw) * fwd * speed, y, Math.cos(yaw) * fwd * speed)
+    }
+}
+
+// QuickMenu.kts - своё окно с кнопками, слайдером и полем ввода, открывается по Ctrl+M
+name("Quick Menu")
+
+var nick = storage.get("nick", "")
+var radius = storage.getInt("radius", 16)
+
+val menu = screen("Быстрое меню") {
+    width(230f)
+    label { "Игрок: " + player.name() + "  HP: " + player.health().toInt() }
+    separator()
+    textInput("Ник друга", nick) { nick = it }
+    button("Добавить в друзья") {
+        if (friends.add(nick)) notify("Друзья", "$nick добавлен", NotifyKind.SUCCESS)
+        else notify("Друзья", "не удалось добавить $nick", NotifyKind.WARN)
+    }
+    slider("Радиус поиска", radius, 4, 64) { radius = it }
+    button("Найти сундуки") {
+        val chests = world.blockEntities(radius.toDouble(), "chest")
+        chat.print("Сундуков рядом: " + chests.size)
+    }
+    toggle("Свет в HUD", storage.getBoolean("hud", true)) { storage.put("hud", it) }
+    button("Закрыть") { close() }
+    onClose {
+        storage.put("nick", nick)
+        storage.put("radius", radius)
+        storage.save()
+    }
+}
+
+bind("ctrl+M") { menu.toggle() }
+
+// ServerHud.kts - перетаскиваемый HUD (двигается в чате) с TPS, пингом и тотемами
+name("Server HUD")
+
+var pops = 0
+onTotemPop { e -> if (e.isSelf) pops++ }
+onRespawn { pops = 0 }
+
+hud("Сервер", 10f, 60f, 110f, 42f) {
+    background()
+    val r = render()
+    val srv = game.server()
+    val tps = srv.tps()
+    r.boldText(6f, 5f, 7f, srv.brand().ifEmpty { "сервер" }, Colors.WHITE)
+    r.text(6f, 16f, 6.5f, "TPS: " + strings.fixed(tps, 1), if (tps > 17) Colors.GREEN else Colors.RED)
+    r.text(6f, 26f, 6.5f, "Пинг: " + srv.pingMs() + " мс   Тотемы: " + pops, Colors.GRAY)
+}
+
+// AutoEat.kts - корутина: ждём голода, берём еду, едим, возвращаем слот
+name("Auto Eat")
+val minFood by slider("Есть при голоде ниже", 14, 1, 19)
+
+var busy = false
+everyTicks(10) {
+    if (busy || !inGame || player.food() >= minFood || player.usingItem()) return@everyTicks
+    val slot = inventory.find { it.isFood() }
+    if (slot < 0 || slot >= 9) return@everyTicks
+    busy = true
+    launch("eat") {
+        val previous = inventory.selectedSlot()
+        inventory.selectSlot(slot)
+        waitTicks(2)
+        control.useKey(true)
+        waitUntil(60) { player.food() >= 20 || !inventory.heldItem().isFood() }
+        control.useKey(false)
+        waitTicks(2)
+        inventory.selectSlot(previous)
+        busy = false
+    }
+}
+
+onDisable {
+    control.useKey(false)
+    cancelJobs()
+    busy = false
+}
+
+// Events.kts - новые события: здоровье, вход игроков, тайтлы, звуки, отправка чата, бинды
+name("Events demo")
+
+onHealthChange { e ->
+    if (e.isDamage && e.damage() >= 6f) notify("Урон", "-" + strings.fixed(e.damage().toDouble(), 1) + " HP", NotifyKind.WARN)
+}
+onPlayerJoin { name -> if (friends.isFriend(name)) notify("Друзья", "$name зашёл", NotifyKind.INFO) }
+onPlayerLeave { name -> if (friends.isFriend(name)) chat.print("$name вышел") }
+onTitle { e -> if (e.isActionBar && e.text().contains("реклама", ignoreCase = true)) e.cancel() }
+onSound { e -> if (e.contains("explode") && e.distanceToPlayer() > 20) e.cancel() }
+onChatSend { e -> if (!e.isCommand && e.message.startsWith("!")) e.message = e.message.removePrefix("!").uppercase() }
+onDeath { e -> waypoints.add("death", e.position().x.toInt(), e.position().y.toInt(), e.position().z.toInt()) }
+onDimensionChange { e -> log.info("измерение: " + e.from() + " -> " + e.to()) }
+
+bind(Key.G, ctrl = true) { chat.print("Ctrl+G") }
+bindHold(Key.MOUSE_4) { if (client.tick() % 10 == 0L) chat.print("держу кнопку мыши") }
+
+// WebCheck.kts - HTTP-запрос вне игрового потока, ответ приходит в игровой поток
+name("Web check")
+
+command("ip") {
+    description("Показать внешний IP")
+    runs {
+        httpGet("https://api.ipify.org?format=json") { r ->
+            if (r.ok()) reply("IP: " + r.jsonObject()["ip"]) else reply("ошибка: " + r.error())
+        }
+    }
+}
+
+command("status") {
+    runs {
+        launch {
+            val r = fetch("https://example.com", timeoutMs = 5000)
+            chat.print("example.com ответил " + r.status() + " за " + r.millis() + " мс")
+        }
+    }
+}
+
+// ServerGraph.kts - HUD-графики TPS и пинга (двигаются в чате), подробное окно по Ctrl+G
+name("Server Graph")
+
+val tps = series("TPS", capacity = 120, color = Colors.GREEN).decimals(1)
+val ping = series("Пинг", capacity = 120, color = 0xFF4FC3F7).unit(" мс")
+tps.sampleEvery(10) { if (inGame) game.server().tps() else null }
+ping.sampleEvery(10) { if (inGame) game.server().pingMs() else null }
+
+hudChart("TPS", tps, x = 10f, y = 120f, width = 150f, height = 60f) {
+    area(tps)
+    yRange(0.0, 20.0)
+    gridLines = 4
+}
+hudChart("Пинг", ping, x = 10f, y = 186f, width = 150f, height = 60f)
+
+val big = chart("Сервер") {
+    area(tps)
+    line(ping)
+    xLabel = "последние 60 секунд"
+}
+
+val window = screen("Сервер") {
+    width(320f)
+    label { "TPS сейчас " + strings.fixed(tps.last(), 1) + ", средний " + strings.fixed(tps.avg(), 1) + ", минимум " + strings.fixed(tps.min(), 1) }
+    chart(big, 140f)
+    button("Очистить") { tps.clear(); ping.clear() }
+}
+bind("ctrl+G") { window.toggle() }
+
+// DeathShot.kts - при смерти делает скриншот и отправляет его в Discord
+name("Death screenshot")
+description("Скриншот смерти в Discord-вебхук")
+
+// адрес вебхука вводится в настройках скрипта, а не хранится в коде
+val hookUrl by input("Discord webhook", "")
+val withHud by checkBox("С интерфейсом", true)
+
+onDeath { e ->
+    if (hookUrl.isBlank()) {
+        notify("Death screenshot", "укажи вебхук в настройках", NotifyKind.WARN)
+        return@onDeath
+    }
+    val pos = e.position()
+    launch("death-shot") {
+        waitTicks(5)
+        val shot = capture(hideHud = !withHud, scale = 0.75)
+        shot.save("deaths/" + strings.time("yyyy-MM-dd_HH-mm-ss") + ".png")
+        discord.webhook(hookUrl).send {
+            username = "Brokke"
+            content = "**" + player.name() + "** умер"
+            image(shot, "death.png")
+            embed {
+                title = e.message().ifBlank { "Смерть" }
+                description = "Сервер: " + game.serverAddress().ifBlank { "одиночная игра" }
+                color = Colors.RED
+                field("Координаты", "${pos.x.toInt()} ${pos.y.toInt()} ${pos.z.toInt()}", true)
+                field("Измерение", world.dimension(), true)
+                imageAttachment("death.png")
+                timestamp()
+            }
+            onResult { r -> if (!r.ok()) log.warn("Discord: " + r.status() + " " + r.error()) }
+        }
+    }
+}
+
+// TelegramRemote.kts - управление клиентом из Telegram: /screen, /status, /hp, /disconnect, /chat
+name("Telegram remote")
+description("Бот: скриншот, статус, здоровье, выход с сервера, сообщение в чат")
+
+// токен от @BotFather и id своего чата вводятся в настройках скрипта
+val token by input("Токен бота", "")
+val myChat by input("Мой chat id", "")
+
+fun status(): String =
+    if (!inGame) "не в игре"
+    else "Сервер: " + game.serverAddress().ifBlank { "одиночная" } +
+        "\nTPS: " + strings.fixed(game.server().tps(), 1) + ", пинг " + game.server().pingMs() + " мс" +
+        "\nHP: " + player.health().toInt() + "/" + player.maxHealth().toInt() +
+        "\nПозиция: " + player.blockX() + " " + player.blockY() + " " + player.blockZ()
+
+if (token.isBlank() || myChat.toLongOrNull() == null) {
+    log.warn("укажи токен бота и свой chat id в настройках и перезагрузи скрипт")
+} else {
+    val bot = telegram.bot(token).allowedChats(myChat.toLong())
+    val menu = keyboard {
+        row("Скриншот", "screen", "Статус", "status")
+        row("Здоровье", "hp")
+    }
+
+    bot.onCommand("/start") { m -> m.reply("Привет! Команды: /screen /status /hp /disconnect /chat <текст>", menu) }
+    bot.onCommand("/status") { m -> m.reply(status()) }
+    bot.onCommand("/hp") { m -> m.reply(if (inGame) "HP: " + player.health() + ", еда: " + player.food() else "не в игре") }
+    bot.onCommand("/screen") { m ->
+        screenshot {
+            scale = 0.6
+            onReady { shot -> m.replyPhoto(shot, status()) }
+            onError { err -> m.reply("не получилось: $err") }
+        }
+    }
+    bot.onCommand("/disconnect") { m ->
+        if (!inGame) m.reply("и так не в игре") else {
+            m.reply("отключаюсь")
+            afterTicks(10) { client.disconnect() }
+        }
+    }
+    bot.onCommand("/chat") { m ->
+        val text = m.rest()
+        if (text.isBlank()) m.reply("напиши: /chat текст") else if (!inGame) m.reply("не в игре") else {
+            chat.sendToServer(text)
+            m.reply("отправлено")
+        }
+    }
+    bot.onCallback("screen") { cb -> takeScreenshot { shot -> bot.sendPhoto(cb.chatId, shot, "") }; cb.answer("делаю скриншот") }
+    bot.onCallback("status") { cb -> cb.reply(status()) }
+    bot.onCallback("hp") { cb -> cb.answer("HP: " + player.health().toInt(), true) }
+    bot.onMessage { m -> if (!m.isCommand) m.reply("не понял. /start - список команд") }
+
+    onDeath { e -> bot.send(myChat.toLong(), "Ты умер: " + e.message()) }
+}
